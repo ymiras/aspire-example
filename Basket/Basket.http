@@ -1,0 +1,34 @@
+@Basket_HostAddress = http://localhost:5064
+
+GET {{Basket_HostAddress}}/basket/ymiras
+Accept: application/json
+
+###
+
+POST {{Basket_HostAddress}}/basket
+Content-Type: application/json
+
+{
+  "username": "ymiras",
+  "items": [
+    {
+      "quantity": 2,
+      "color": "Red",
+      "price": 139.00,
+      "productId": 9,
+      "productName": "桌面LED灯"
+    },
+    {
+      "quantity": 1,
+      "color": "Blue",
+      "price": 699.99,
+      "productId": 10,
+      "productName": "降噪头戴耳机"
+    }
+  ]
+}
+
+###
+
+DELETE {{Basket_HostAddress}}/basket/ymiras
+Content-Type: application/json

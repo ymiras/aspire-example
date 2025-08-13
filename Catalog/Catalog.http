@@ -1,0 +1,38 @@
+@Catalog_HostAddress = http://localhost:5289
+
+GET {{Catalog_HostAddress}}/products
+Accept: application/json
+
+###
+
+GET {{Catalog_HostAddress}}/products/12
+Accept: application/json
+
+###
+
+POST {{Catalog_HostAddress}}/products
+Content-Type: application/json
+
+{
+  "name": "平板保护套",
+  "description": "PU皮革材质，带自动唤醒功能，轻薄便携。",
+  "price": 129.00,
+  "imageUrl": "/images/tablet-case.jpg"
+}
+
+###
+
+PUT {{Catalog_HostAddress}}/products/10
+Content-Type: application/json
+
+{
+  "name": "降噪头戴耳机",
+  "description": "主动降噪，环绕音效，舒适耳罩设计。",
+  "price": 599.99,
+  "imageUrl": "/images/headphones.jpg"
+}
+
+###
+
+DELETE {{Catalog_HostAddress}}/products/11
+Content-Type: application/json
