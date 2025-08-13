@@ -1,0 +1,12 @@
+# Project
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+# Edit settings.
+.idea
+
+# sln.DotSettings.user
+YmirasCloud.sln.DotSettings.user
