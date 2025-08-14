@@ -16,11 +16,13 @@
         <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.4.0" />
         <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.4.1" />
         <PackageReference Include="Aspire.Hosting.Redis" Version="9.4.0" />
+        <PackageReference Include="CommunityToolkit.Aspire.Hosting.Ollama" Version="9.7.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Basket\Basket.csproj" />
       <ProjectReference Include="..\Catalog\Catalog.csproj" />
+      <ProjectReference Include="..\WebApp\WebApp.csproj" />
     </ItemGroup>
 
 </Project>
