@@ -36,11 +36,12 @@ if (builder.ExecutionContext.IsRunMode)
 
 var ollama = builder
     .AddOllama("ollama", 11434)
+    // .WithOpenWebUI()
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
-    // .WithOpenWebUI();
 
 var llama = ollama.AddModel("llama3.2");
+var embedding = ollama.AddModel("all-minilm");
 
 // Projects
 var catalog = builder
@@ -48,9 +49,11 @@ var catalog = builder
     .WithReference(catalogDb)
     .WithReference(rabbitmq)
     .WithReference(llama)
+    .WithReference(embedding)
     .WaitFor(catalogDb)
     .WaitFor(rabbitmq)
-    .WaitFor(llama);
+    .WaitFor(llama)
+    .WaitFor(embedding);
 
 var basket = builder
     .AddProject<Projects.Basket>("basket")

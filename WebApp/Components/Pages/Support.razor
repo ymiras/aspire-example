@@ -1,0 +1,37 @@
+﻿@page "/support"
+
+@inject CatalogApiClient CatalogApiClient
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>Support</PageTitle>
+
+<h1>Support</h1>
+
+<p>Ask questions about your amazing outdoor products that you can purchase.</p>
+
+<div class="form-group">
+    <label for="query" class="form-label">Type your questions: </label>
+    <div class="input-group mb-3">
+        <input type="text" id="query" class="form-control" @bind="queryTerm" placeholder="Enter you questions" />
+        <button id="btnSend" class="btn btn-primary" @onclick='DoSend'> Send </button>
+    </div>
+</div>
+
+@if (response != null)
+{
+    <p><em>@response</em></p>
+}
+
+@code {
+    private string queryTerm = default!;
+    private string response = default!;
+
+    private async Task DoSend()
+    {
+        response = "loading...";
+        await Task.Delay(500);
+        response = await CatalogApiClient.SupportProducts(queryTerm);
+    }
+
+}
