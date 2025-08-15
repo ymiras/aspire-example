@@ -1,0 +1,69 @@
+﻿@page "/search"
+
+@inject CatalogApiClient CatalogApiClient
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>Search Products</PageTitle>
+
+<h1>Search Products</h1>
+
+<p>Search our amazing outdoor products that you can purchase .</p>
+
+<div class="form-group">
+    <label for="query" class="form-label">Type your questions: </label>
+    <div class="input-group mb-3">
+        <input type="text" id="query" class="form-control" @bind="queryTerm" placeholder="Enter you questions" />
+        <button id="btnSend" class="btn btn-primary" @onclick='FetchProducts'> Fetch </button>
+    </div>
+    <div class="form-check form-switch mb-3">
+        <InputCheckbox id="aiSearchCheckBox" @bind-Value="aiSearch" />
+        <label class="form-check-label" for="aiSearch">Use Semantic Search</label>
+    </div><hr />
+</div>
+
+
+@if (products is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (products.Count == 0)
+{
+    <p><em>There is a problem loading out products. Please try again later.</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in products)
+        {
+            <tr>
+                <td>@item.ImageUrl</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.Price</td>
+            </tr>    
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string queryTerm = default!;
+    private bool aiSearch = false;
+    private List<Product>? products;
+
+    private async Task FetchProducts()
+    {
+        await Task.Delay(500);
+        products = await CatalogApiClient.SearchProducts(queryTerm, aiSearch);
+    }
+}
