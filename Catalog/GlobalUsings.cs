@@ -8,3 +8,5 @@ global using System.Reflection;
 global using Scalar.AspNetCore;
 global using ServiceDefaults;
 global using ServiceDefaults.Messaging;
+global using Microsoft.SemanticKernel;
+global using Microsoft.Extensions.VectorData;

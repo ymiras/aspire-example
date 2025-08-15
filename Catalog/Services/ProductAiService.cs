@@ -1,6 +1,10 @@
 ﻿namespace Catalog.Services;
 
-public class ProductAiService(IChatClient chatClient)
+public class ProductAiService(
+    ProductDbContext dbContext,
+    IChatClient chatClient,
+    IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator,
+    VectorStoreCollection<int, ProductVector> productVectorCollection)
 {
     public async Task<string> SupportAsync(string query)
     {
@@ -22,5 +26,62 @@ public class ProductAiService(IChatClient chatClient)
         
         var resultPrompt = await chatClient.GetResponseAsync(chatHistory);
         return resultPrompt.Messages.First().Text;
+    }
+
+    public async Task<IEnumerable<Product>> SearchProductsAsync(string query)
+    {
+        if (!await productVectorCollection.CollectionExistsAsync())
+        {
+            await InitialEmbeddingsAsync();
+        }
+
+        var queryEmbedding = await embeddingGenerator.GenerateVectorAsync(query);
+        var results = productVectorCollection.SearchAsync(
+            queryEmbedding, top: 2,
+            options: new VectorSearchOptions<ProductVector>
+            {
+                VectorProperty = r => r.Vector
+            }
+       );
+
+        List<Product> products = [];
+
+        await foreach (var result in results)
+        {
+            products.Add(new Product
+            {
+                Id = result.Record.Id,
+                Name = result.Record.Name,
+                Description = result.Record.Description,
+                ImageUrl = result.Record.ImageUrl,
+                Price = result.Record.Price,
+            });
+        }
+        
+        return products;
+    }
+
+    private async Task InitialEmbeddingsAsync()
+    {
+        await productVectorCollection.EnsureCollectionExistsAsync();
+        
+        var products = await dbContext.Products.ToListAsync();
+
+        foreach (var product in products)
+        {
+            var productInfo = $"{product.Name} is a product that cost [{product.Price}] and [{product.Description}]";
+
+            var productVector = new ProductVector
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Price = product.Price,
+                Vector = await embeddingGenerator.GenerateVectorAsync(productInfo)
+            };
+
+            await productVectorCollection.UpsertAsync(productVector);
+        }
     }
 }

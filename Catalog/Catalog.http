@@ -41,3 +41,13 @@ Content-Type: application/json
 
 GET {{Catalog_HostAddress}}/products/support/give me 1 outdoor activity
 Content-Type: application/json
+
+###
+
+GET {{Catalog_HostAddress}}/products/search/%E8%80%B3%E6%9C%BA
+Content-Type: application/json
+
+###
+
+GET {{Catalog_HostAddress}}/products/aisearch/%E6%89%A9%E5%B1%95
+Content-Type: application/json
